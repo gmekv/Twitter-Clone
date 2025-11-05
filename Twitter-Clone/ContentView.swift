@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  Twitter-Clone
-//
-//  Created by Giorgi Mekvabishvili on 04.11.25.
-//
-
 import SwiftUI
 
 struct ContentView: View {

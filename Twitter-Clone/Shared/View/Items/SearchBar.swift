@@ -24,6 +24,15 @@ struct SearchBar: View {
                         .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
                         .padding(.leading, 8)
                 })
+                .onTapGesture {
+                    isEditing = true
+                }
+                .onChange(of: text) { oldValue, newValue in
+                    if !newValue.isEmpty && !isEditing {
+                        isEditing = true
+                    }
+                }
+            
             Button(action: {
                 isEditing = false
                 text = ""
@@ -35,10 +44,6 @@ struct SearchBar: View {
                     .transition(.move(edge: .trailing))
                     .animation(.default)
             })
-            
-                .onTapGesture {
-                    isEditing = true
-                }
         }
     }
 }

@@ -23,6 +23,7 @@ struct Home: View {
                                 Image("Home")
                                     .renderingMode(.template)
                                     .foregroundStyle(Color("bg"))
+                                    .navigationBarHidden(true)
                             } else {
                                 Image("Home")
                             }
@@ -47,6 +48,7 @@ struct Home: View {
                                 Image("Notifications")
                                     .renderingMode(.template)
                                     .foregroundStyle(Color("bg"))
+                                    .navigationBarHidden(true)
                             } else {
                                 Image("Notifications")
                             }
@@ -59,6 +61,8 @@ struct Home: View {
                                 Image("Messages")
                                     .renderingMode(.template)
                                     .foregroundStyle(Color("bg"))
+                                    .navigationBarHidden(true)
+
                             } else {
                                 Image("Messages")
                             }

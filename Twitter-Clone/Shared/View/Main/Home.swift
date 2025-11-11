@@ -15,6 +15,7 @@ struct Home: View {
     
     var body: some View {
         VStack {
+            
             ZStack {
                 TabView(selection: $selectedIndex) {
                     Feed()

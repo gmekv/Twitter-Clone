@@ -15,3 +15,7 @@ extension View {
         return UIScreen.main.bounds
     }
 }
+
+extension Color {
+    static let twitterBlue = Color(red: 29/255, green: 161/255, blue: 242/255)
+}

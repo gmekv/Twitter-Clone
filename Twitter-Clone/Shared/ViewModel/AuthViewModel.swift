@@ -85,6 +85,7 @@ class AuthViewModel: ObservableObject {
         }
     }
     
+    
     func fetchUser(userId: String) {
         print(userId)
         

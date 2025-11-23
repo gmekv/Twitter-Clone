@@ -55,8 +55,7 @@ Spacer()
             }
             HStack {
                 Button {
-//                    self.viewModel.register(reqBody: ["username": "john123"
-//                                                      , "name": "name", "email": "testemail@gmail.com", "password": "secret123"])
+                    self.viewModel.register(name: name, username: name, email: email, password: password)
                 } label: {
                     Capsule()
                         .frame(width: 60, height: 30, alignment: .center)

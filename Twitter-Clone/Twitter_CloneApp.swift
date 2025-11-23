@@ -12,7 +12,7 @@ struct Twitter_CloneApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationStack {
-                RegisterView()
+                LogInView()
             }
         }
     }

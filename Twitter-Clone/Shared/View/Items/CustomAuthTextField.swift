@@ -11,16 +11,25 @@ struct CustomAuthTextField: View {
     
     var placeholder: String
     @Binding var text: String
+    @FocusState private var isFocused: Bool
     
     var body: some View {
         VStack {
             ZStack(alignment: .leading) {
-                Text(placeholder)
-                    .foregroundStyle(.gray)
+                if text.isEmpty {
+                    Text(placeholder)
+                        .foregroundStyle(.gray)
+                        .allowsHitTesting(false)
+                }
                 
                 TextField("", text: $text)
                     .frame(height: 45)
                     .foregroundStyle(Color.twitterBlue)
+                    .focused($isFocused)
+            }
+            .contentShape(Rectangle())
+            .onTapGesture {
+                isFocused = true
             }
             Rectangle()
                 .frame(height: 1, alignment: .center)
@@ -28,6 +37,7 @@ struct CustomAuthTextField: View {
                 .padding(.top, -2)
         }
         .padding(.horizontal)
+        
     }
 }
 

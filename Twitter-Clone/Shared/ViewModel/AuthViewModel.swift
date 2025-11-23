@@ -5,68 +5,122 @@
 //  Created by Giorgi Mekvabishvili on 21.11.25.
 //
 
+
 import SwiftUI
 import Combine
 
 class AuthViewModel: ObservableObject {
     
-    func login() {
-        print("[AuthViewModel] login() called")
+    @Published var isAuthenticated: Bool = false
+    @Published var currentUser: User?
+    
+    init() {
+        let defaults = UserDefaults.standard
+        let token = defaults.object(forKey: "jsonwebtoken")
+        
+        if token != nil {
+            isAuthenticated = true
+            
+            if let userId = defaults.object(forKey: "userid") {
+                fetchUser(userId: userId as! String)
+                print("User fetched")
+            }
+            
+        }
+        else {
+            isAuthenticated = false
+        }
     }
     
-    func register(reqBody: [String: Any]) {
-        print("[AuthViewModel] register() called with body: \(reqBody)")
-        guard let url = URL(string: "http://localhost:3000/users") else {
-            print("[AuthViewModel] Failed to build URL for registration endpoint")
-            return
-        }
-        let session = URLSession.shared
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        print("[AuthViewModel] Configured request: URL=\(url.absoluteString), method=POST")
+    static let shared = AuthViewModel()
+    
+    func login(email: String, password: String) {
         
-        do {
-            let bodyData = try JSONSerialization.data(withJSONObject: reqBody, options: .prettyPrinted)
-            request.httpBody = bodyData
-            let bodyString = String(data: bodyData, encoding: .utf8) ?? "<non-UTF8 body>"
-            print("[AuthViewModel] Encoded HTTP body (\(bodyData.count) bytes):\n\(bodyString)")
-        } catch let error {
-            print("[AuthViewModel] Failed to encode request body: \(error)")
+        let defaults = UserDefaults.standard
+        
+        AuthServices.requestDomain = "http://localhost:3000/users/login"
+        AuthServices.login(email: email, password: password) { res in
+            
+            switch res {
+                case .success(let data):
+                    guard let user = try? JSONDecoder().decode(ApiResponse.self, from: data as! Data) else {
+                        return
+                    }
+                    DispatchQueue.main.async {
+                        defaults.setValue(user.token, forKey: "jsonwebtoken")
+                        defaults.setValue(user.user.id, forKey: "userid")
+                        self.isAuthenticated = true
+                        self.currentUser = user.user
+                    }
+                    print(user.user.email)
+                case .failure(let error):
+                    print(error.localizedDescription)
+            }
+            
         }
         
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        print("[AuthViewModel] Request headers set: Content-Type=application/json, Accept=application/json")
-        let task = session.dataTask(with: request) { data, res, err in
-            print("[AuthViewModel] register() response received")
-            if let err = err {
-                print("[AuthViewModel] Network error: \(err)")
-                return
-            }
-            if let httpRes = res as? HTTPURLResponse {
-                print("[AuthViewModel] HTTP status: \(httpRes.statusCode)")
-                print("[AuthViewModel] Response headers: \(httpRes.allHeaderFields)")
-            } else {
-                print("[AuthViewModel] Response was not an HTTPURLResponse")
-            }
-            guard let data = data else {
-                print("[AuthViewModel] No data in response")
-                return
-            }
-            let rawString = String(data: data, encoding: .utf8) ?? "<non-UTF8 response>"
-            print("[AuthViewModel] Raw response body:\n\(rawString)")
-            do {
-                let obj = try JSONSerialization.jsonObject(with: data, options: .mutableContainers)
-                print("[AuthViewModel] Parsed JSON: \(obj)")
-            } catch let error {
-                print("[AuthViewModel] JSON parsing error: \(error)")
-            }
-        }
-        task.resume()
-        print("[AuthViewModel] Registration request started")
     }
+    
+    func register(name: String, username: String, email: String, password: String) {
+        
+        let defaults = UserDefaults.standard
+        
+        AuthServices.register(email: email, username: username, password: password, name: name) { res in
+            switch res {
+                case .success(let data):
+                    guard let user = try? JSONDecoder().decode(ApiResponse.self, from: data as! Data) else {
+                        return
+                    }
+                    DispatchQueue.main.async {
+                        defaults.setValue(user.token, forKey: "jsonwebtoken")
+                        defaults.setValue(user.user.id, forKey: "userid")
+                        self.isAuthenticated = true
+                        self.currentUser = user.user
+                    }
+                case .failure(let error):
+                    print(error.localizedDescription)
+                
+                
+            }
+        }
+    }
+    
+    func fetchUser(userId: String) {
+        print(userId)
+        
+        let defaults = UserDefaults.standard
+        AuthServices.requestDomain = "http://localhost:3000/users/\(userId)"
+        
+        AuthServices.fetchUser(id: userId) { res in
+            switch res {
+                case .success(let data):
+                    guard let user = try? JSONDecoder().decode(User.self, from: data as! Data) else {
+                        return
+                    }
+                    DispatchQueue.main.async {
+                        defaults.setValue(user.id, forKey: "userid")
+                        self.isAuthenticated = true
+                        self.currentUser = user
+                        print(user)
+                    }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
     func logout() {
-        print("[AuthViewModel] logout() called")
+        let defaults = UserDefaults.standard
+        let dictionary = defaults.dictionaryRepresentation()
+
+            dictionary.keys.forEach
+            { key in   defaults.removeObject(forKey: key)
+            }
+        
+        DispatchQueue.main.async {
+            self.isAuthenticated = false
+        }
     }
 }
+
 

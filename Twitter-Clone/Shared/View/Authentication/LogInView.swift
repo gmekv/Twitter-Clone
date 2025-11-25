@@ -12,7 +12,7 @@ struct LogInView: View {
     @State var password = ""
     @State var emailDone = false
     @Environment(\.dismiss) private var dismiss
-    @StateObject var viewModel = AuthViewModel()
+    @EnvironmentObject var viewModel: AuthViewModel
 
 
     var body: some View {

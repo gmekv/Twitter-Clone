@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct WelcomeView: View {
+    
+    @EnvironmentObject var viewModel: AuthViewModel
+
     private var attributedText: AttributedString {
         var text = AttributedString("By signing up, you agree to our Terms, Privacy Policy, and Cookie Use.")
         let blueColor = Color.twitterBlue

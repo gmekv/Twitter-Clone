@@ -13,6 +13,7 @@ class AuthViewModel: ObservableObject {
     
     @Published var isAuthenticated: Bool = false
     @Published var currentUser: User?
+
     
     init() {
         let defaults = UserDefaults.standard
@@ -33,7 +34,7 @@ class AuthViewModel: ObservableObject {
     }
     
     static let shared = AuthViewModel()
-    
+        
     func login(email: String, password: String) {
         
         let defaults = UserDefaults.standard
@@ -90,7 +91,6 @@ class AuthViewModel: ObservableObject {
         print(userId)
         
         let defaults = UserDefaults.standard
-        AuthServices.requestDomain = "http://localhost:3000/users/\(userId)"
         
         AuthServices.fetchUser(id: userId) { res in
             switch res {

@@ -11,9 +11,7 @@ import SwiftUI
 struct Twitter_CloneApp: App {
     var body: some Scene {
         WindowGroup {
-            NavigationStack {
-                LogInView()
-            }
+            ContentView().environmentObject(AuthViewModel.shared)
         }
     }
 }

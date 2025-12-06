@@ -1,23 +1,29 @@
 
 import Foundation
  
-struct ApiResponse: Decodable {
-    var user: User
-    var token: String
+struct ApiResponse: Codable {
+    let token: String?
+    let user: User
 }
 
-struct User: Decodable, Identifiable {
-    var _id: String
-    var id: String {
-        return _id
-    }
+struct User: Codable {
+    let id: String
+    let name: String
     let username: String
-    let user: String
     let email: String
-    var location: String?
-    var bio: String?
-    var website: String?
-    var avatarExists: String?
-    var followers: [String]
-    var following: [String]
+    let followers: [String]
+    let following: [String]
+    let createdAt: String
+    let updatedAt: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "_id"
+        case name
+        case username
+        case email
+        case followers
+        case following
+        case createdAt
+        case updatedAt
+    }
 }

@@ -97,7 +97,7 @@ struct Home: View {
 
                 }
             .sheet(isPresented: $showCreateTweet) {
-                CreateTweetView(text: text)
+                CreateTweet(show: $showCreateTweet, text: text)  
             }
             }
         }

@@ -205,17 +205,17 @@ struct UserProfile: View {
                     
                     VStack(spacing: 18) {
                         
-                        // Sample Tweets...
-                        TweetCellView(tweet: "Hey Tim, are those regular glasses? #WWDC2020", tweetImage: "post")
-                        
-                        Divider()
-                        
-                        ForEach(1...20,id: \.self){_ in
-                            
-                            TweetCellView(tweet: "text")
-                            
-                            Divider()
-                        }
+//                        // Sample Tweets...
+//                        TweetCellView(tweet: "Hey Tim, are those regular glasses? #WWDC2020", tweetImage: "post")
+//                        
+//                        Divider()
+//                        
+//                        ForEach(1...20,id: \.self){_ in
+//                            
+//                            TweetCellView(tweet: "text")
+//                            
+//                            Divider()
+//                        }
                     }
                     .padding(.top)
                     .zIndex(0)

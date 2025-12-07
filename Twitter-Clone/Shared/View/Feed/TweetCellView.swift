@@ -6,10 +6,14 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct TweetCellView: View {
-    var tweet: String
-    var tweetImage: String?
+    @ObservedObject var viewModel: TweetCellViewModel
+    
+    init(viewModel: TweetCellViewModel) {
+        self.viewModel = viewModel
+    }
     
     var body: some View {
         VStack {
@@ -21,27 +25,48 @@ struct TweetCellView: View {
                     .clipShape(Circle())
                 VStack(alignment: .leading) {
                     
-                    Text("cem")
+                    Text("\(self.viewModel.tweet.user)")
                         .fontWeight(.bold)
                         .foregroundStyle(.primary)
                     +
-                    Text("@cemg")
+                    Text("\(self.viewModel.tweet.username)")
                         .foregroundStyle(.gray)
                     
                     
-                    Text(tweet)
+                    Text(self.viewModel.tweet.text)
                         .frame(maxHeight: 100, alignment: .top)
-                    if let image = tweetImage {
-                        GeometryReader { proxy in
-                            Image(image)
+                    
+                    if viewModel.tweet.image == "true" {
+                        GeometryReader{ proxy in
+                            let imageURL = "http://localhost:3000/tweets/\(viewModel.tweet.id)/image"
+                            
+                            KFImage(URL(string: imageURL))
+                                .placeholder {
+                                    ProgressView()
+                                        .frame(width: proxy.size.width, height: 250)
+                                }
+                                .onFailure { error in
+                                    print("❌ Image load failed: \(error)")
+                                    print("📍 Attempted URL: \(imageURL)")
+                                }
+                                .onSuccess { result in
+                                    print("✅ Image loaded successfully from: \(imageURL)")
+                                }
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
-                                .frame(width: proxy.frame(in: .global).width, height: 250)
+                                .frame(width: proxy.size.width, height: 250)
                                 .cornerRadius(15)
                                 .clipped()
                         }
                         .frame(height: 250)
-                    }}
+                        .onAppear {
+                            print("🖼️ Attempting to load image for tweet: \(viewModel.tweet.id)")                        }
+                    }
+                
+                    
+                }
+                
+                Spacer()
             })
             //Cell bottom
             
@@ -82,8 +107,8 @@ struct TweetCellView: View {
         }
     }
 
-#Preview {
-    TweetCellView(tweet: "sample", tweetImage: "post")
-}
+//#Preview {
+//    TweetCellView(tweet: "sample", tweetImage: "post")
+//}
 
 var sampleText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."

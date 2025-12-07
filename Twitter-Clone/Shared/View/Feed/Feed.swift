@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct Feed: View {
-    @ObservedObject var viewModel = FeedViewModel()
+    @StateObject var viewModel = FeedViewModel()
     let user: User
     
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack(spacing: 18) {
                 ForEach(viewModel.tweets) { tweet in
-                    TweetCellView(tweet: tweet.text)
+                    TweetCellView(viewModel: TweetCellViewModel(tweet: tweet))
                     Divider()
                 }
             }

@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		4891D4452EE48A4E00DCE349 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 4891D4442EE48A4E00DCE349 /* Kingfisher */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		489025D12EBA185D00DF4453 /* Twitter-Clone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Twitter-Clone.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4891D4452EE48A4E00DCE349 /* Kingfisher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +70,7 @@
 			);
 			name = "Twitter-Clone";
 			packageProductDependencies = (
+				4891D4442EE48A4E00DCE349 /* Kingfisher */,
 			);
 			productName = "Twitter-Clone";
 			productReference = 489025D12EBA185D00DF4453 /* Twitter-Clone.app */;
@@ -94,6 +100,9 @@
 			);
 			mainGroup = 489025C82EBA185D00DF4453;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				4891D4432EE48A4E00DCE349 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 489025D22EBA185D00DF4453 /* Products */;
 			projectDirPath = "";
@@ -332,6 +341,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4891D4432EE48A4E00DCE349 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.6.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4891D4442EE48A4E00DCE349 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4891D4432EE48A4E00DCE349 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 489025C92EBA185D00DF4453 /* Project object */;
 }

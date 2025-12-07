@@ -19,7 +19,7 @@ struct MainView: View {
                 ZStack(alignment: Alignment(horizontal: .leading, vertical: .center) ) {
                     VStack {
                         TopBar(x: $x)
-                        Home()
+                        Home (user: user)
                     }
                     .onTapGesture {
                         // Close menu when tapping main content area

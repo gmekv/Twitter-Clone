@@ -6,9 +6,10 @@
 //
 
 import Foundation
-
+import OSLog
 
 public class RequestServices {
+    private static let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "com.app", category: "RequestServices")
     public static var requestDomain = ""
     public static func postTweet(text: String, user: String, username: String, userId: String, completion: @escaping(_ result: [String: Any]?) -> Void) {
         
@@ -16,7 +17,7 @@ public class RequestServices {
         let url = URL(string: requestDomain)!
         let session = URLSession.shared
         var request = URLRequest(url: url)
-            
+        
         request.httpMethod = "POST"
         
         do {
@@ -49,5 +50,69 @@ public class RequestServices {
             }
         }
         task.resume()
+    }
+    
+    static func fetchTweets() async throws -> [Tweet] {
+        logger.info("🔄 Starting to fetch tweets")
+        
+        guard let url = URL(string: "http://localhost:3000/tweets") else {
+            logger.error("❌ Failed to create URL for tweets endpoint")
+            throw(URLError(.badURL))
+        }
+        
+        logger.debug("📍 URL created: \(url.absoluteString)")
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        
+        let token = UserDefaults.standard.string(forKey: "jsonwebtoken")
+        guard let validatedtoken = token else {
+            logger.error("❌ No authentication token found in UserDefaults")
+            throw(URLError(.userAuthenticationRequired))
+        }
+        
+        logger.debug("🔐 Adding authentication token to request")
+        request.addValue("Bearer \(validatedtoken)", forHTTPHeaderField: "Authorization")
+        
+        logger.info("📤 Sending GET request to fetch tweets")
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        logger.debug("📥 Received response, data size: \(data.count) bytes")
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            logger.error("❌ Response is not an HTTPURLResponse")
+            throw URLError(.badServerResponse)
+        }
+        
+        logger.info("📊 HTTP Status Code: \(httpResponse.statusCode)")
+        
+        guard httpResponse.statusCode == 200 else {
+            logger.error("❌ Bad server response with status code: \(httpResponse.statusCode)")
+            
+            // Log response body for debugging
+            if let responseString = String(data: data, encoding: .utf8) {
+                logger.debug("Response body: \(responseString)")
+            }
+            
+            throw URLError(.badServerResponse)
+        }
+        
+        logger.debug("📝 Attempting to decode JSON response")
+        
+        do {
+            let tweets = try JSONDecoder().decode([Tweet].self, from: data)
+            logger.info("✅ Successfully decoded \(tweets.count) tweets")
+            return tweets
+        } catch {
+            logger.error("❌ Failed to decode tweets: \(error.localizedDescription)")
+            
+            // Log raw JSON for debugging
+            if let jsonString = String(data: data, encoding: .utf8) {
+                logger.debug("Raw JSON: \(jsonString)")
+            }
+            
+            throw error
+        }
     }
 }

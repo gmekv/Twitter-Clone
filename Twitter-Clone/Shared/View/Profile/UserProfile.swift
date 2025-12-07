@@ -212,7 +212,7 @@ struct UserProfile: View {
                         
                         ForEach(1...20,id: \.self){_ in
                             
-                            TweetCellView(tweet: sampleText)
+                            TweetCellView(tweet: "text")
                             
                             Divider()
                         }

@@ -7,17 +7,28 @@
 
 import SwiftUI
 
-
 struct Tweet: Identifiable, Decodable {
-    let _id: String
-    var id: String {
-        return _id
-    }
-    
+    let id: String
     let text: String
-    let userId: String
-    let username: String
     let user: String
+    let username: String
+    let userID: String
+    let image: String?
+    let likes: [String]
+    let createdAt: String
+    let updatedAt: String
+    var didLike: Bool? = false
+
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "_id"
+        case text
+        case user
+        case username
+        case userID
+        case image
+        case likes
+        case createdAt
+        case updatedAt
+    }
 }
-
-

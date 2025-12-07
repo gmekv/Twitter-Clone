@@ -29,7 +29,7 @@ struct TweetCellView: View {
                         .foregroundStyle(.gray)
                     
                     
-                    Text(sampleText)
+                    Text(tweet)
                         .frame(maxHeight: 100, alignment: .top)
                     if let image = tweetImage {
                         GeometryReader { proxy in

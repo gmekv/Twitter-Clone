@@ -30,7 +30,7 @@ struct MainView: View {
                         }
                     }
                     
-                    SlideMenu()
+                    SlideMenu(viewModel: AuthViewModel.shared)
                         .frame(width: width)
                         .offset(x: x + dragOffset)
                         .ignoresSafeArea(.all, edges: .vertical)

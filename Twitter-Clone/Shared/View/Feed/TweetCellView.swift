@@ -29,6 +29,8 @@ struct TweetCellView: View {
                         .fontWeight(.bold)
                         .foregroundStyle(.primary)
                     +
+                    Text(" ")
+                    +
                     Text("\(self.viewModel.tweet.username)")
                         .foregroundStyle(.gray)
                     

@@ -9,6 +9,8 @@ import SwiftUI
 
 struct UserProfile: View {
     
+    @ObservedObject var viewModel: ProfileViewModel
+    
     @State var offset: CGFloat = 0
     
     @Environment(\.colorScheme) var colorScheme
@@ -20,6 +22,14 @@ struct UserProfile: View {
     @State var tabBarOffset: CGFloat = 0
     
     @State var titleOffset: CGFloat = 0
+    
+    @State var user: User
+    @State var editProfileShow = false
+    
+    init(user: User) {
+        self.user = user
+        self.viewModel = ProfileViewModel(user: user)
+    }
     
     var body: some View {
         
@@ -95,7 +105,7 @@ struct UserProfile: View {
                         
                         Spacer()
                         
-                        Button(action: {}, label: {
+                        Button(action: {self.editProfileShow.toggle()}, label: {
                             Text("Edit Profile")
                                 .foregroundColor(.blue)
                                 .padding(.vertical,10)
@@ -106,6 +116,12 @@ struct UserProfile: View {
                                         .stroke(Color.blue,lineWidth: 1.5)
                                 )
                         })
+                        .sheet(isPresented: $editProfileShow) {
+                            
+                        } content: {
+                            EditProfileView(user: user)
+                        }
+
                     }
                     .padding(.top,-25)
                     .padding(.bottom,-10)
@@ -267,8 +283,3 @@ struct UserProfile: View {
 }
 
 
-struct UserProfile_Previews: PreviewProvider {
-    static var previews: some View {
-        UserProfile()
-    }
-}

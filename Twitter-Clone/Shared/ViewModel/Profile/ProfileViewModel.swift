@@ -17,7 +17,7 @@ class ProfileViewModel: ObservableObject {
         self.user = user
 //        let defaults = UserDefaults.standard
 //        let token = defaults.object(forKey: "jsonwebtoken")
-//        
+//
 //        if token != nil {
 //            if let userId = defaults.object(forKey: "userid") {
 //                fetchUser(userId: userId as! String)
@@ -53,7 +53,7 @@ class ProfileViewModel: ObservableObject {
         guard let user = AuthViewModel.shared.currentUser else { return }
         
         if let image = image {
-            ImageUploader.uploadImage(paramName: "avatar", fileName: "image1", image: image, urlPath: "/users/me/avatar")
+            ImageUploader.upload(paramName: "avatar", fileName: "image1", image: image, urlPath: "/users/me/avatar")
         }
     }
     
@@ -94,19 +94,19 @@ class ProfileViewModel: ObservableObject {
 //            self.tweet.didLike = false
 //        }
         
-//        if (self.user.followers.contains(AuthViewModel.shared.currentUser!._id)) {
-//            self.user.isFollowed = true
-//        }
-//        else {
-//            self.user.isFollowed = false
+        if (self.user.followers.contains(AuthViewModel.shared.currentUser!._id)) {
+            self.user.isFollowed = true
+        }
+        else {
+            self.user.isFollowed = false
         }
     }
     
     func checkIfIsCurrentUser() {
-//        if (self.user._id == AuthViewModel.shared.currentUser?._id) {
-////            AuthViewModel.shared.currentUser?.isCurrentUser = true
-//            self.user.isCurrentUser = true
-//        }
+        if (self.user._id == AuthViewModel.shared.currentUser?._id) {
+//            AuthViewModel.shared.currentUser?.isCurrentUser = true
+            self.user.isCurrentUser = true
+        }
     }
     
     func fetchUser(userId: String) {
@@ -131,4 +131,4 @@ class ProfileViewModel: ObservableObject {
             }
         }
     }
-
+}

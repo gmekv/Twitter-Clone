@@ -382,7 +382,28 @@ public class AuthServices {
 
         let task = session.dataTask(with: request) { data, res, err in
             if let err = err {
-                print("Fetch user error: \(err.localizedDescription)")
+                print("❌ Fetch user error occurred:")
+                print("  - Error description: \(err.localizedDescription)")
+                print("  - Error domain: \((err as NSError).domain)")
+                print("  - Error code: \((err as NSError).code)")
+                print("  - Underlying error: \((err as NSError).userInfo)")
+                
+                // Map specific NSURLError codes to AuthenticationError
+                let nsError = err as NSError
+                if nsError.domain == NSURLErrorDomain {
+                    switch nsError.code {
+                    case NSURLErrorNotConnectedToInternet, NSURLErrorNetworkConnectionLost:
+                        completion(.failure(.networkError))
+                    case NSURLErrorTimedOut:
+                        completion(.failure(.timeout))
+                    case NSURLErrorCannotFindHost, NSURLErrorCannotConnectToHost:
+                        completion(.failure(.custom(errorMessage: "Cannot connect to server at \(urlString.absoluteString)")))
+                    default:
+                        completion(.failure(.custom(errorMessage: "Network error: \(err.localizedDescription)")))
+                    }
+                } else {
+                    completion(.failure(.custom(errorMessage: err.localizedDescription)))
+                }
                 return
             }
             

@@ -8,26 +8,37 @@
 import SwiftUI
 
 struct Feed: View {
-    @StateObject var viewModel = FeedViewModel()
+    
+    @ObservedObject var viewModel = FeedViewModel()
     let user: User
     
     var body: some View {
-        ScrollView(.vertical, showsIndicators: false) {
-            VStack(spacing: 18) {
-                ForEach(viewModel.tweets) { tweet in
-                    TweetCellView(viewModel: TweetCellViewModel(tweet: tweet))
-                    Divider()
+        
+        RefreshableScrollView {
+            ScrollView(.vertical, showsIndicators: false, content: {
+                LazyVStack(spacing: 18){
+                    
+                    // Sample Tweets...
+                    
+                    ForEach(viewModel.tweets){ tweet in
+                        
+                        TweetCellView(viewModel: TweetCellViewModel(tweet: tweet, currentUser: user))
+                        
+                        Divider()
+                    }
                 }
+                .padding(.horizontal)
+                .padding(.top)
+                .zIndex(0)
+            })
+        } onRefresh: { control in
+            DispatchQueue.main.async {
+                self.viewModel.fetchTweets()
+                control.endRefreshing()
             }
+            
         }
-        .padding(.top)
-        .padding(.horizontal)
-        .zIndex(0)
-       
-        .task {
-            await viewModel.fetchTweets()
-        }
+        
     }
-       
 }
 

@@ -7,7 +7,11 @@ struct ApiResponse: Codable {
 }
 
 struct User: Codable {
-    let id: String
+    var _id: String
+
+    var id: String {
+        return _id
+    }
     var name: String
     let username: String
     var email: String
@@ -18,16 +22,8 @@ struct User: Codable {
     var bio: String?
     var website: String?
     var location: String?
+    var avatarExists: Bool?
+    var isCurrentUser: Bool? = false
+    var isFollowed: Bool? = false
     
-    
-    enum CodingKeys: String, CodingKey {
-        case id = "_id"
-        case name
-        case username
-        case email
-        case followers
-        case following
-        case createdAt
-        case updatedAt
-    }
 }

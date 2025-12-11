@@ -30,7 +30,7 @@ struct EditProfileView: View {
     init(user: Binding<User>) {
         self._user = user
         self.viewModel = EditProfileViewModel(user: self._user.wrappedValue)
-        self._name = State(initialValue: _user.name.wrappedValue ?? "")
+        self._name = State(initialValue: _user.name.wrappedValue)
         self._website = State(initialValue: _user.website.wrappedValue ?? "")
         self._bio = State(initialValue: _user.bio.wrappedValue ?? "")
         self._location = State(initialValue: _user.location.wrappedValue ?? "")
@@ -55,7 +55,9 @@ struct EditProfileView: View {
                             print("With image")
                             self.viewModel.uploadProfileImage(text: "text", image: selectedImage)
                             self.viewModel.uploadUserData(name: name, bio: bio, website: website, location: location)
-                            KingfisherManager.shared.cache.clearCache()
+                            
+                            let avatarURLString = "http://localhost:3000/users/\(self.viewModel.user.id)/avatar"
+                            KingfisherManager.shared.cache.removeImage(forKey: avatarURLString)
                         }
                         else {
                             print("Without image")

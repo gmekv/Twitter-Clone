@@ -8,28 +8,30 @@
 import Foundation
 import Combine
 
-
 class FeedViewModel: ObservableObject {
-    @Published var tweets: [Tweet] = []
-    @Published var  isLoading: Bool = false
-    //change
-    @Published var errorMessage: String?
     
-    func fetchTweets() async {
-        isLoading = true
-        errorMessage = nil
+    @Published var tweets = [Tweet]()
+    
+    init() {
+        fetchTweets()
+    }
+    
+    func fetchTweets() {
         
-        do {
-            let fetchedTweets = try await RequestServices.fetchTweets()
-            
-            await MainActor.run {
-                self.tweets = fetchedTweets
-                self.isLoading = false
-            }
-        } catch {
-            await MainActor.run {
-                self.errorMessage = "Failed to load tweets. Please try again."
-                self.isLoading = false
+        RequestServices.requestDomain = "http://localhost:3000/tweets"
+        
+        RequestServices.fetchData { res in
+            switch res {
+                case .success(let data):
+                    guard let tweets = try? JSONDecoder().decode([Tweet].self, from: data as! Data) else {
+                        return
+                    }
+                    DispatchQueue.main.async {
+                        self.tweets = tweets
+                    }
+
+                case .failure(let error):
+                    print(error.localizedDescription)
             }
         }
     }

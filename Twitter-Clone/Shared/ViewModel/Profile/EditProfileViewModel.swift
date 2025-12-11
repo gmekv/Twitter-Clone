@@ -26,7 +26,7 @@ class EditProfileViewModel: ObservableObject {
         self.user.bio = bio
         self.user.website = userNewWebsite
         self.user.location = userNewLocation
-        
+    
     }
     
     func uploadProfileImage(text: String, image: UIImage?) {
@@ -37,7 +37,7 @@ class EditProfileViewModel: ObservableObject {
         
         if let image = image {
             print("There is an image")
-//            ImageUploader.uploadImage(paramName: "avatar", fileName: "image1", image: image, urlPath: urlPath)
+            ImageUploader.upload(paramName: "avatar", fileName: "image1", image: image, urlPath: urlPath)
         }
     }
     
@@ -57,6 +57,7 @@ class EditProfileViewModel: ObservableObject {
                 self.uploadComplete = true
 
             }
+            
 //            switch res {
 //                case .success(let data):
 //                    completion(.success(data))
@@ -67,8 +68,6 @@ class EditProfileViewModel: ObservableObject {
 //                case .failure(.decodingError):
 //                    completion(.failure(.invalidCredentials))
 //            }
-            
-            
         }
     }
 }

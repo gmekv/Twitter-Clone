@@ -78,7 +78,7 @@ public class AuthServices {
     public static var requestDomain = ""
     
     static func login(email: String, password: String, completion: @escaping (_ result: Result<Data?, AuthenticationError>) -> Void) {
-        guard let urlString = URL(string: "http://localhost:3000/users/login") else {
+        guard let urlString = URL(string: APIConfig.Endpoints.login) else {
             completion(.failure(.custom(errorMessage: "Invalid URL configuration")))
             return
         }
@@ -121,7 +121,7 @@ public class AuthServices {
     
     
     static func register(email: String, username: String, password: String, name: String, completion: @escaping (_ result: Result<Data?, AuthenticationError>) -> Void) {
-        let urlString = URL(string: "http://localhost:3000/users")!
+        let urlString = URL(string: APIConfig.Endpoints.register)!
         print("Register request to: \(urlString)")
         print("Registration details - email: \(email), username: \(username), name: \(name)")
         
@@ -369,7 +369,7 @@ public class AuthServices {
     
     static func fetchUser(id: String, completion: @escaping (_ result: Result<Data?, AuthenticationError>) -> Void) {
         
-        let urlString = URL(string: "http://localhost:3000/users/\(id)")!
+        let urlString = URL(string: APIConfig.Endpoints.user(id: id))!
         
         let session = URLSession.shared
         
@@ -439,7 +439,7 @@ public class AuthServices {
     
     static func fetchUsers(completion: @escaping (_ result: Result<Data?, AuthenticationError>) -> Void) {
         
-        let urlString = URL(string: "http://localhost:3000/users")!
+        let urlString = URL(string: APIConfig.Endpoints.allUsers)!
         
         print("Fetching all users")
         print("Request URL: \(urlString)")

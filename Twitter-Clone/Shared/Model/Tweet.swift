@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct Tweet: Identifiable, Decodable {
     let _id: String
     let text: String
@@ -21,5 +19,15 @@ struct Tweet: Identifiable, Decodable {
     let image: String?
     var likes : [String]
     var didLike: Bool? = false
+    
+    enum CodingKeys: String, CodingKey {
+        case _id
+        case text
+        case userId = "userID"  // Maps backend's "userID" to Swift's "userId"
+        case username
+        case user
+        case image
+        case likes
+    }
 }
 

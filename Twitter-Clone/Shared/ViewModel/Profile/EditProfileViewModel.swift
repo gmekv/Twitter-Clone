@@ -33,7 +33,7 @@ class EditProfileViewModel: ObservableObject {
         
         guard let user = AuthViewModel.shared.currentUser else { return }
         
-        let urlPath = "/users/me/avatar"
+        let urlPath = APIConfig.Endpoints.uploadAvatar()
         
         if let image = image {
             print("There is an image")
@@ -45,9 +45,7 @@ class EditProfileViewModel: ObservableObject {
         
         let userId = user.id 
         
-        let urlPath = "/users/\(userId)"
-        
-        let url = URL(string: "http://localhost:3000\(urlPath)")!
+        let url = URL(string: APIConfig.Endpoints.updateUser(id: userId))!
         
         AuthServices.makePatchRequestWithAuth(urlString: url, reqBody: ["name": name, "bio": bio, "website": website, "location": location]) { res in
         

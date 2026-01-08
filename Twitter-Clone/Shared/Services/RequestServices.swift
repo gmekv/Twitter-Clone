@@ -55,7 +55,7 @@ public class RequestServices {
     static func fetchTweets() async throws -> [Tweet] {
         logger.info("🔄 Starting to fetch tweets")
         
-        guard let url = URL(string: "http://localhost:3000/tweets") else {
+        guard let url = URL(string: APIConfig.Endpoints.tweets) else {
             logger.error("❌ Failed to create URL for tweets endpoint")
             throw(URLError(.badURL))
         }

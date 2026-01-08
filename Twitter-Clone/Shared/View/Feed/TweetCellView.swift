@@ -40,7 +40,7 @@ struct TweetCellView: View {
                     
                     if viewModel.tweet.image == "true" {
                         GeometryReader{ proxy in
-                            let imageURL = "http://localhost:3000/tweets/\(viewModel.tweet.id)/image"
+                            let imageURL = APIConfig.Endpoints.tweetImage(id: viewModel.tweet.id)
                             
                             KFImage(URL(string: imageURL))
                                 .placeholder {

@@ -28,7 +28,7 @@ class TweetCellViewModel: ObservableObject {
     }
     
     func fetchUser(userId: String) {
-        AuthServices.requestDomain = "http://localhost:3000/users/\(userId)"
+        AuthServices.requestDomain = APIConfig.Endpoints.user(id: userId)
         
         AuthServices.fetchUser(id: userId) { res in
             switch res {
@@ -47,14 +47,14 @@ class TweetCellViewModel: ObservableObject {
     }
     
     func likeTweet() {
-        RequestServices.requestDomain = "http://localhost:3000/tweets/\(self.tweet.id)/like"
+        RequestServices.requestDomain = APIConfig.Endpoints.likeTweet(id: self.tweet.id)
         
         RequestServices.likeTweet(id: self.tweet.id) { result in
             print("Tweet has been liked")
             print("Console log: \(result)")
             
         }
-        RequestServices.requestDomain = "http://localhost:3000/notifications"
+        RequestServices.requestDomain = APIConfig.Endpoints.notifications
         RequestServices.sendNotification(username: self.currentUser.username, notSenderId: self.currentUser.id, notReceiverId: self.tweet.userId, notificationType: NotificationType.like.rawValue, postText: self.tweet.text) { result in
             print(result)
         }
@@ -62,7 +62,7 @@ class TweetCellViewModel: ObservableObject {
     }
     
     func unlikeTweet() {
-        RequestServices.requestDomain = "http://localhost:3000/tweets/\(self.tweet.id)/unlike"
+        RequestServices.requestDomain = APIConfig.Endpoints.unlikeTweet(id: self.tweet.id)
         
         RequestServices.likeTweet(id: self.tweet.id) { result in
             print("Tweet has been unliked")

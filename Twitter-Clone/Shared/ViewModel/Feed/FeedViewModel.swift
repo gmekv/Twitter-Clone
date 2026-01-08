@@ -7,31 +7,31 @@
 
 import Foundation
 import Combine
+import OSLog
 
 class FeedViewModel: ObservableObject {
     
     @Published var tweets = [Tweet]()
+    private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "com.app", category: "FeedViewModel")
     
     init() {
         fetchTweets()
     }
     
     func fetchTweets() {
+        logger.info("🔄 Starting to fetch tweets for feed")
         
-        RequestServices.requestDomain = "http://localhost:3000/tweets"
-        
-        RequestServices.fetchData { res in
-            switch res {
-                case .success(let data):
-                    guard let tweets = try? JSONDecoder().decode([Tweet].self, from: data as! Data) else {
-                        return
-                    }
-                    DispatchQueue.main.async {
-                        self.tweets = tweets
-                    }
-
-                case .failure(let error):
-                    print(error.localizedDescription)
+        Task {
+            do {
+                let fetchedTweets = try await RequestServices.fetchTweets()
+                
+                await MainActor.run {
+                    self.tweets = fetchedTweets
+                    logger.info("✅ Successfully loaded \(fetchedTweets.count) tweets")
+                }
+            } catch {
+                logger.error("❌ Failed to fetch tweets: \(error.localizedDescription)")
+                print("Error fetching tweets: \(error)")
             }
         }
     }

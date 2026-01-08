@@ -99,7 +99,7 @@ struct UserProfile: View {
                                 Button {
                                     self.imagePickerRepresented.toggle()
                                 } label: {
-                                    KFImage(URL(string: "http://localhost:3000/users/\(self.viewModel.user.id)/avatar"))
+                                    KFImage(URL(string: APIConfig.Endpoints.userAvatar(id: self.viewModel.user.id)))
                                         .placeholder({
                                             Image("blankpp")
                                                 .resizable()

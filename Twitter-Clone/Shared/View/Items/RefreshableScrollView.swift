@@ -32,9 +32,7 @@ struct RefreshableScrollView<Content: View>: UIViewRepresentable {
         refreshControl.tintColor = UIColor(red: 0.114, green: 0.631, blue: 0.949, alpha: 1)
         refreshControl.addTarget(context.coordinator, action: #selector(context.coordinator.onRefresh), for: .valueChanged)
         
-        // Since were removing the last subview..
-        // so it will remove refresh controll
-        // so add after setting up view....
+       
         
         setUpView(uiscrollView: uiscrollView)
         

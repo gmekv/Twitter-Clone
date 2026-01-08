@@ -28,7 +28,7 @@ struct SlideMenu : View {
                 VStack(alignment: .leading){
                     
                     NavigationLink(destination: UserProfile(user: self.viewModel.currentUser!)) {
-                        KFImage(URL(string: "http://localhost:3000/users/\(self.viewModel.currentUser!.id)/avatar"))
+                        KFImage(URL(string: APIConfig.Endpoints.userAvatar(id: self.viewModel.currentUser!.id)))
                             .placeholder({
                                 Image("blankpp")
                                     .resizable()

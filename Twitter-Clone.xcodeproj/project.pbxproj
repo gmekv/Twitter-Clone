@@ -7,10 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		48317BEF2F0D4BB10042887A /* GITHUB_COMMIT_DESCRIPTION.md in Resources */ = {isa = PBXBuildFile; fileRef = 48317BEE2F0D4BB10042887A /* GITHUB_COMMIT_DESCRIPTION.md */; };
 		4891D4452EE48A4E00DCE349 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 4891D4442EE48A4E00DCE349 /* Kingfisher */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		48317BEE2F0D4BB10042887A /* GITHUB_COMMIT_DESCRIPTION.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = GITHUB_COMMIT_DESCRIPTION.md; sourceTree = "<group>"; };
 		489025D12EBA185D00DF4453 /* Twitter-Clone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Twitter-Clone.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -39,6 +41,7 @@
 			children = (
 				489025D32EBA185D00DF4453 /* Twitter-Clone */,
 				489025D22EBA185D00DF4453 /* Products */,
+				48317BEE2F0D4BB10042887A /* GITHUB_COMMIT_DESCRIPTION.md */,
 			);
 			sourceTree = "<group>";
 		};
@@ -118,6 +121,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48317BEF2F0D4BB10042887A /* GITHUB_COMMIT_DESCRIPTION.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

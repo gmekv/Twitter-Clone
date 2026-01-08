@@ -16,7 +16,7 @@ struct ImageUploader {
         logger.info("🚀 Starting image upload")
         logger.debug("Parameters - paramName: \(paramName), fileName: \(fileName), urlPath: \(urlPath)")
         
-        let url = URL(string: "http://localhost:3000\(urlPath)")
+        let url = URL(string: "\(APIConfig.baseURL)\(urlPath)")
         let boundary = UUID().uuidString
         let session = URLSession.shared
         

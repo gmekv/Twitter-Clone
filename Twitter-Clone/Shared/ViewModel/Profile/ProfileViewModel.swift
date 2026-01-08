@@ -30,7 +30,7 @@ class ProfileViewModel: ObservableObject {
     
     func fetchTweets() {
         
-        RequestServices.requestDomain = "http://localhost:3000/tweets/\(self.user.id)"
+        RequestServices.requestDomain = APIConfig.Endpoints.userTweets(userId: self.user.id)
         
         RequestServices.fetchData { res in
             switch res {
@@ -60,13 +60,13 @@ class ProfileViewModel: ObservableObject {
     func follow() {
         guard let authedUser = AuthViewModel.shared.currentUser else { return }
         
-        RequestServices.requestDomain = "http://localhost:3000/users/\(self.user.id)/follow"
+        RequestServices.requestDomain = APIConfig.Endpoints.follow(id: self.user.id)
         
         RequestServices.followingProcess(id: self.user.id) { result in
             print(result)
             print("Followed")
         }
-        RequestServices.requestDomain = "http://localhost:3000/notifications"
+        RequestServices.requestDomain = APIConfig.Endpoints.notifications
         RequestServices.sendNotification(username: authedUser.username, notSenderId: authedUser.id, notReceiverId: self.user.id, notificationType: NotificationType.follow.rawValue, postText: "") { result in
             print("FOLLOWED")
             print(result)
@@ -76,7 +76,7 @@ class ProfileViewModel: ObservableObject {
     }
     
     func unfollow() {
-        RequestServices.requestDomain = "http://localhost:3000/users/\(self.user.id)/unfollow"
+        RequestServices.requestDomain = APIConfig.Endpoints.unfollow(id: self.user.id)
         
         RequestServices.followingProcess(id: self.user.id) { result in
             print(result)
@@ -113,7 +113,7 @@ class ProfileViewModel: ObservableObject {
         print(userId)
         
         let defaults = UserDefaults.standard
-        AuthServices.requestDomain = "http://localhost:3000/users/\(userId)"
+        AuthServices.requestDomain = APIConfig.Endpoints.user(id: userId)
         
         AuthServices.fetchUser(id: userId) { res in
             switch res {

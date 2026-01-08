@@ -61,6 +61,10 @@ struct APIConfig {
             return "\(baseURL)/tweets/\(id)/unlike"
         }
         
+        static func tweetImage(id: String) -> String {
+            return "\(baseURL)/tweets/\(id)/image"
+        }
+        
         // Notification endpoints
         static let notifications = "\(baseURL)/notifications"
         

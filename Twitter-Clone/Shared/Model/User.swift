@@ -6,7 +6,7 @@ struct ApiResponse: Codable {
     let user: User
 }
 
-struct User: Codable {
+struct User: Codable, Identifiable {
     var _id: String
 
     var id: String {

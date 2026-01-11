@@ -7,30 +7,51 @@
 
 import SwiftUI
 
-struct SearchView: View {
+struct SearchView : View {
+    
     @State var text = ""
     @State var isEditing = false
     
-    var body: some View {
+    var users: [User] {
+        return text.isEmpty ? viewModel.users : viewModel.filteredUsers(text)
+    }
+    
+    @ObservedObject var viewModel = SearchViewModel()
+    
+    var body : some View {
+        
         VStack {
-            SearchBar(text: $text, isEditing: $isEditing)
-                .padding(.horizontal)
             
-            if !isEditing {
-                List(0..<9) { i in
-                    SearchCell(tag: "Hello", tweets: String(i))
-
-            }
-            }
-            else {
-                List(0..<9) { _ in
-                    SearchUserCell()
+            ScrollView {
+                SearchBar(text: $text, isEditing: $isEditing)
+                    .padding(.horizontal)
+                    .padding(.top, 8)
+                
+                
+                LazyVStack {
+                    ForEach(users) { user in
+                        NavigationLink(destination: UserProfile(user: user)) {
+                            SearchUserCell(user: user)
+                                .padding(.leading)
+                        }
+                    }
                 }
             }
         }
     }
 }
 
-#Preview {
-    SearchView()
-}
+//struct SearchCell : View {
+//    
+//    var tag = ""
+//    var tweets = ""
+//    
+//    var body : some View{
+//        
+//        VStack(alignment : .leading,spacing : 5){
+//            
+//            Text(tag).fontWeight(.heavy)
+//            Text(tweets + " Tweets").fontWeight(.light)
+//        }
+//    }
+//}

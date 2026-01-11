@@ -30,15 +30,20 @@ class EditProfileViewModel: ObservableObject {
     }
     
     func uploadProfileImage(text: String, image: UIImage?) {
-        
-        guard let user = AuthViewModel.shared.currentUser else { return }
+        // Safety check: ensure user is still authenticated
+        guard AuthViewModel.shared.currentUser != nil else {
+            print("⚠️ Upload failed: User not authenticated")
+            return
+        }
         
         let urlPath = APIConfig.Endpoints.uploadAvatar()
         
         if let image = image {
             print("There is an image")
             ImageUploader.upload(paramName: "avatar", fileName: "image1", image: image, urlPath: urlPath)
-        }
+            
+            // Update local copy
+            self.user.avatarExists = true        }
     }
     
     func uploadUserData(name: String?, bio: String?, website: String?, location: String?) {

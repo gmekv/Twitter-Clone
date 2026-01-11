@@ -40,7 +40,6 @@ struct UserProfile: View {
     init(user: User) {
         self.user = user
         self.viewModel = ProfileViewModel(user: user)
-        
     }
     
     

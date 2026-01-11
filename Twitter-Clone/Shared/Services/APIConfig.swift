@@ -13,8 +13,6 @@ struct APIConfig {
     // Production URL (Render)
     static let baseURL = "https://twitter-api-3qt3.onrender.com"
     
-    // Uncomment for local development:
-    // static let baseURL = "http://localhost:3000"
     
     // MARK: - Endpoints
     
@@ -74,7 +72,7 @@ struct APIConfig {
         }
         
         static func uploadTweetImage(tweetId: String) -> String {
-            return "/uploadTweetImage/\(tweetId)"
+            return "/uploadTweetImage/\(tweetId)"  // Match the backend API structure
         }
     }
 }

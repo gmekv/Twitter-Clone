@@ -13,15 +13,15 @@ struct ImageUploader {
     
     static func upload(paramName: String, fileName: String, image: UIImage, urlPath: String)  {
         
-        logger.info("🚀 Starting image upload")
-        logger.debug("Parameters - paramName: \(paramName), fileName: \(fileName), urlPath: \(urlPath)")
+        logger.info("🚀 Image Upload: Starting image upload")
+        logger.debug("Image Upload: Parameters - paramName: \(paramName), fileName: \(fileName), urlPath: \(urlPath)")
         
         let url = URL(string: "\(APIConfig.baseURL)\(urlPath)")
         let boundary = UUID().uuidString
         let session = URLSession.shared
         
         guard let url = url else {
-            logger.error("❌ Failed to create URL from path: \(urlPath)")
+            logger.error("❌ Image Upload: Failed to create URL from path: \(urlPath)")
             return
         }
         
@@ -30,11 +30,11 @@ struct ImageUploader {
         
         // Authentication
         guard let token = UserDefaults.standard.string(forKey: "jsonwebtoken") else {
-            logger.error("❌ No authentication token found in UserDefaults")
+            logger.error("❌ Image Upload: No authentication token found in UserDefaults")
             return
         }
         
-        logger.debug("🔐 Adding authentication token")
+        logger.debug("🔐 Image Upload: Adding authentication token")
         urlRequest.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         urlRequest.addValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
         
@@ -45,51 +45,54 @@ struct ImageUploader {
         data.append("Content-Type: image/png\r\n\r\n".data(using: .utf8)!)
         
         guard let imageData = image.pngData() else {
-            logger.error("❌ Failed to convert image to PNG data")
+            logger.error("❌ Image Upload: Failed to convert image to PNG data")
             return
         }
         
-        logger.info("📦 Image data size: \(imageData.count) bytes")
+        logger.info("📦 Image Upload: Image data size: \(imageData.count) bytes")
         data.append(imageData)
         
         data.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
         
-        logger.info("📤 Uploading image (total data size: \(data.count) bytes)")
+        logger.info("📤 Image Upload: Uploading image (total data size: \(data.count) bytes)")
         
         session.uploadTask(with: urlRequest, from: data) { responseData, response, error in
             if let error = error {
-                logger.error("❌ Upload failed with error: \(error.localizedDescription)")
+                logger.error("❌ Image Upload: Upload failed with error: \(error.localizedDescription)")
                 return
             }
             
             if let httpResponse = response as? HTTPURLResponse {
-                logger.info("📥 Received response with status code: \(httpResponse.statusCode)")
+                logger.info("📥 Image Upload: Received response with status code: \(httpResponse.statusCode)")
                 
                 if httpResponse.statusCode == 200 || httpResponse.statusCode == 201 {
-                    logger.info("✅ Upload successful")
+                    logger.info("✅ Image Upload: Upload successful")
                 } else {
-                    logger.warning("⚠️ Upload completed with non-success status code: \(httpResponse.statusCode)")
+                    logger.warning("⚠️ Image Upload: Upload completed with non-success status code: \(httpResponse.statusCode)")
                 }
             }
             
             if let responseData = responseData {
-                logger.debug("Response data size: \(responseData.count) bytes")
+                logger.debug("Image Upload: Response data size: \(responseData.count) bytes")
                 
                 if let jsonData = try? JSONSerialization.jsonObject(with: responseData, options: .allowFragments) {
                     if let json = jsonData as? [String: Any] {
-                        logger.debug("Response JSON: \(String(describing: json))")
+                        logger.debug("Image Upload: Response JSON: \(String(describing: json))")
                     }
                 } else if let responseString = String(data: responseData, encoding: .utf8) {
-                    logger.debug("Response string: \(responseString)")
+                    logger.debug("Image Upload: Response string: \(responseString)")
                 }
             } else {
-                logger.warning("⚠️ No response data received")
+                logger.warning("⚠️ Image Upload: No response data received")
             }
         }.resume()
     }
+    
     static func changeImage(paramName: String, fileName: String, image: UIImage, urlPath: String) {
-        print("http://localhost:3000\(urlPath)")
-        let url = URL(string: "http://localhost:3000\(urlPath)")
+        logger.info("🔄 Image Change: Starting image change")
+        logger.debug("Image Change: Parameters - paramName: \(paramName), fileName: \(fileName), urlPath: \(urlPath)")
+        
+        let url = URL(string: "\(APIConfig.baseURL)\(urlPath)")
         
         // generate boundary string using a unique per-app string
         let boundary = UUID().uuidString
@@ -131,8 +134,10 @@ struct ImageUploader {
     }
     
     static func deleteImage(paramName: String, fileName: String, image: UIImage, urlPath: String) {
-        print("http://localhost:3000\(urlPath)")
-        let url = URL(string: "http://localhost:3000\(urlPath)")
+        logger.info("🗑️ Image Delete: Starting image deletion")
+        logger.debug("Image Delete: Parameters - paramName: \(paramName), fileName: \(fileName), urlPath: \(urlPath)")
+        
+        let url = URL(string: "\(APIConfig.baseURL)\(urlPath)")
         
         // generate boundary string using a unique per-app string
         let boundary = UUID().uuidString

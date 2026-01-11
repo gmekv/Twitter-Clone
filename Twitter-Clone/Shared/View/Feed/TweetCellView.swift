@@ -10,7 +10,8 @@ import Kingfisher
 
 struct TweetCellView: View {
     @ObservedObject var viewModel: TweetCellViewModel
-    
+    var didLike: Bool { return viewModel.tweet.didLike ?? false }
+
     init(viewModel: TweetCellViewModel) {
         self.viewModel = viewModel
     }
@@ -18,99 +19,127 @@ struct TweetCellView: View {
     var body: some View {
         VStack {
             HStack(alignment: .top, content: {
-                Image("logo")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 55, height: 55)
-                    .clipShape(Circle())
-                VStack(alignment: .leading) {
+                if let user = viewModel.user {
                     
-                    Text("\(self.viewModel.tweet.user)")
-                        .fontWeight(.bold)
-                        .foregroundStyle(.primary)
-                    +
-                    Text(" ")
-                    +
-                    Text("\(self.viewModel.tweet.username)")
-                        .foregroundStyle(.gray)
+                    NavigationLink(destination: UserProfile(user: user)) {
+                        if viewModel.user?.avatarExists == true {
+                            KFImage(URL(string: APIConfig.Endpoints.userAvatar(id: viewModel.tweet.userId)))
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: 55, height: 55)
+                                .clipShape(Circle())
+                        } else {
+                            Circle()
+                                .fill(Color.gray.opacity(0.3))
+                                .frame(width: 55, height: 55)
+                                .overlay(
+                                    Image(systemName: "person.fill")
+                                        .foregroundColor(.gray)
+                                )
+                        }
+                    }
+                } else {
                     
+                    // Loading placeholder - shows while user data is being fetched
+                    Circle()
+                        .fill(Color.gray.opacity(0.3))
+                        .frame(width: 55, height: 55)
+                        .overlay(
+                            Image(systemName: "person.fill")
+                                .foregroundColor(.red)
+                        )
+                        .redacted(reason: .placeholder)
+                }
+                
+                
+                VStack(alignment: .leading, spacing: 10, content: {
                     
-                    Text(self.viewModel.tweet.text)
+                    (
+                        
+                        Text("\(viewModel.tweet.username) ")
+                            .fontWeight(.bold)
+                            .foregroundColor(.primary)
+                            
+                            +
+                            
+                        Text("@\(viewModel.tweet.username)")
+                            .foregroundColor(.gray)
+                    )
+                    
+                    Text(viewModel.tweet.text)
                         .frame(maxHeight: 100, alignment: .top)
                     
                     if viewModel.tweet.image == "true" {
                         GeometryReader{ proxy in
-                            let imageURL = APIConfig.Endpoints.tweetImage(id: viewModel.tweet.id)
-                            
-                            KFImage(URL(string: imageURL))
-                                .placeholder {
-                                    ProgressView()
-                                        .frame(width: proxy.size.width, height: 250)
-                                }
-                                .onFailure { error in
-                                    print("❌ Image load failed: \(error)")
-                                    print("📍 Attempted URL: \(imageURL)")
-                                }
-                                .onSuccess { result in
-                                    print("✅ Image loaded successfully from: \(imageURL)")
-                                }
+
+                            KFImage(URL(string: APIConfig.Endpoints.tweetImage(id: viewModel.tweet.id)))
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
-                                .frame(width: proxy.size.width, height: 250)
+                                .frame(width: proxy.frame(in: .global).width, height: 250)
                                 .cornerRadius(15)
-                                .clipped()
                         }
                         .frame(height: 250)
-                        .onAppear {
-                            print("🖼️ Attempting to load image for tweet: \(viewModel.tweet.id)")                        }
                     }
-                
                     
-                }
-                
+                })
                 Spacer()
+                // Has been added after designing
             })
-            //Cell bottom
             
-            HStack(spacing: 50) {
-                Button {
-                    
-                } label: {
-                    Image("Comments").resizable()
-                        .frame(width: 16, height: 16)
-                }
+            
+            // Cell Bottom
+            
+            
+            HStack(spacing : 50) {
                 
-                Button {
+                Button(action: {
                     
-                } label: {
-                    Image("Retweet").resizable()
-                        .frame(width: 16, height: 14)
-                }
-                .foregroundStyle(.gray)
-                Button {
+                }) {
                     
-                } label: {
-                    Image("love").resizable()
-                        .frame(width: 18, height: 15)
-                }.foregroundStyle(.gray)
-                    .padding(.top,4)
+                    Image("Comments").resizable().frame(width: 16, height: 16)
+                    
+                }.foregroundColor(.gray)
                 
-                
-                Button {
+                Button(action: {
                     
-                } label: {
-                    Image("upload").resizable()
-                        .renderingMode(.template)
-                        .frame(width: 18, height: 15)
-                }.foregroundStyle(.gray)
-                    .padding(.top,4)
+                }) {
+                    
+                    Image("Retweet").resizable().frame(width: 18, height: 14)
+                    
+                }.foregroundColor(.gray)
+                
+                Button(action: {
+                    if (self.didLike) {
+                        print("it has not been liked")
+                        viewModel.unlikeTweet()
+
+                    }
+                    else {
+                        print("it has been liked")
+                        viewModel.likeTweet()
+                    }
+                }) {
+                    
+                    if (self.didLike == false) {
+                        Image("love").resizable().frame(width: 18, height: 15)
+                    }
+                    else {
+                        Image("love").resizable().renderingMode(.template).foregroundColor(.red).frame(width: 18, height: 15)
+                    }
+                    
+                }.foregroundColor(.gray)
+                
+                Button(action: {
+                    
+                }) {
+                    
+                    Image("upload").resizable().renderingMode(.template).frame(width: 16, height: 16)
+                    
+                }.foregroundColor(.gray)
             }
-        }
+            .padding(.top, 4)
         }
     }
+}
 
-//#Preview {
-//    TweetCellView(tweet: "sample", tweetImage: "post")
-//}
 
-var sampleText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
